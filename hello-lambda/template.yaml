@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: A sample SAM template for deploying Lambda functions.
+
+Resources:
+  ApiGatewayFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: dist/
+      Handler: index.handler
+      Runtime: nodejs14.x
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /hello-lambda-layer-test
+            Method: post
+      Layers:
+        - !Ref MathLayer
+  
+  MathLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: math-layer
+      Description: Math layer demonstration
+      ContentUri: ../math-layer
+      CompatibleRuntimes:
+        - nodejs14.x
+      LicenseInfo: 'MIT'
+      RetentionPolicy: Retain
